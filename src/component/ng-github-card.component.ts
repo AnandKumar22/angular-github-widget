@@ -188,7 +188,7 @@ export class NgGithubCardComponent implements OnChanges {
 
     private db: NgGithubCardService;
 
-    private githubData: GithubData | null = null;
+    githubData: GithubData | null = null;
 
     /**
      * Simple initialization constructor.
