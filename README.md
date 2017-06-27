@@ -1,5 +1,7 @@
 ## Github Widget
 
+## This readme isn't accurate at the moment. Needs update!
+
 ![Github Widget Image](http://i.imgur.com/KfiQIXL.png)
 
 #### How to use
