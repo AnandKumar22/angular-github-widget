@@ -60,4 +60,6 @@ These two examples highlight this usage.
 </div>
 ```
 
-
+#### Thank You!
+Thank you for checking out this project, I hope it's useful to you!
+Have a good day!
