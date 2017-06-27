@@ -1,45 +1,63 @@
-## Github Widget
+## Angular Github Card
 
-## This readme isn't accurate at the moment. Needs update!
-
-![Github Widget Image](http://i.imgur.com/KfiQIXL.png)
-
-#### How to use
+Angular Github Card is a simple component that showing your github details. It's quite perfect for
+use with a portfolio website. This project is based on [github-widget](https://github.com/surbhioberoi/github-widget). 
 
 
-##### Copy paste this code in your HTML, replacing data-username with your GitHub username
+![Angular Github Widget Image](./demo-image.png)
 
-```html
-<div class="github-widget" data-username="surbhioberoi"></div>
-<script src="https://unpkg.com/github-card@1.2.1/dist/widget.js"></script>
+### Set Up
+
+
+##### First, add it to your angular project via npm
+
+```sh
+npm install -S angular-github-card
 ```
 
-##### Via npm
+Next up, add `NgGithubCardModule` to the `imports` of the module you wish to use this in.   
+<b>Like So</b>
 
-`npm install github-card`
+```typescript
+import { NgModule } from '@angular/core';
+import {NgGithubCardModule} from 'ng-github-card';
 
-Then add this to your HTML, replacing data-username value with your own GitHub username
+@NgModule({
+    imports: [
+            /* Other imports*/
+            NgGithubCardModule
+        ]
+})
+export class MyModule {
+    
+}
 
-```html
-<div class="github-widget" data-username="surbhioberoi"></div>
-<script src="../node_modules/github-card/dist/widget.js"></script>
 ```
 
-##### Via bower
+### Usage
 
-`bower install github-widget`
+Usage is very simple. Simply use drop the component's selector in your template, bind a value to
+`githubUser` and it's ready to go.   
+<b>Like So</b>
 
-Then add this to your HTML, replacing data-username value with your own GitHub username
-
-```html
-<div class="github-widget" data-username="surbhioberoi"></div>
-<script src="/bower_components/github-card/dist/widget.js"></script>
+```angular2html
+<ng-github-card [githubUser]="'someGithubUser'"></ng-github-card>
 ```
 
-#### Using multiple widgets in same page
+##### Configuring the top 3 repositories to show
+The widget defaults to sorting your repositories by their start count and picking the top 3 to display.
+You can alter this behaviour by specifying a repository name for one or more of the inputs listed below.
 
-```html
-<div class="github-widget" data-username="github"></div>
-<div class="github-widget" data-username="surbhioberoi"></div>
-<script src="https://unpkg.com/github-card@1.2.1/dist/widget.js"></script>
+* \[top1\]
+* \[top2\]
+* \[top3\]
+
+These two examples highlight this usage.
+```angular2html
+<div>
+    <ng-github-card [githubUser]="'someGithubUser1'" [top1]="'angular-github-widget'"></ng-github-card>
+    <ng-github-card [githubUser]="'someGithubUser2'" [top1]="'angular-github-widget'" [top2]="'an-amazing-repo'"></ng-github-card>
+</div>
 ```
+
+
