@@ -31,7 +31,10 @@ export class NgGithubCardService {
                     activity
                 };
                 resolve(resultData);
-            }).catch(reason => reject(reason));
+            }).catch(reason => {
+                console.log('Came here!!');
+                reject(reason);
+            });
         });
     }
 
@@ -101,6 +104,7 @@ export class NgGithubCardService {
         }
 
         const foundNamed: Repository[] = this.findRepositoriesByName(namedTops, repoQuery);
+
         if (foundNamed.length < this.maxResultRepos) {
             const remain: number = this.maxResultRepos - foundNamed.length;
             const sortedRepos: any[] = this.sortRepoQuery(repoQuery);
@@ -137,7 +141,7 @@ export class NgGithubCardService {
      * @returns {[Repository...]} - Returns an array containing repository objects made from all the verified names.
      */
     private findRepositoriesByName(names: string[], repoQuery: any[]): Repository[] {
-        const filtered = repoQuery.filter(repoObj => (names.find(repoObj.name) || null) !== null);
+        const filtered = repoQuery.filter(repoObj => (names.find(n => n === repoObj.name) || null) !== null);
         return filtered.map(r => this.transmuteRepo(r));
     }
 
