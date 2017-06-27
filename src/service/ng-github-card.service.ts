@@ -1,12 +1,22 @@
 import {Injectable} from '@angular/core';
 import {GithubActivity, GithubData, GithubProfile, Repository} from '../data/interfaces';
 
+/**
+ * Service class to provide data for the component.
+ */
 @Injectable()
 export class NgGithubCardService {
 
     private maxResultRepos = 3;
 
-    public getGithubData(namedTops: string[], githubUser: string): Promise<GithubData> {
+    /**
+     * Queries, processes and organizes the data received from the github api if all queries came back positive.
+     * @param githubUser - The user to query data for.
+     * @param namedTops - A list of repositories to check for and return in the list if they exist in the user's
+     * repositories.
+     * @returns {Promise<GithubData>} Returns a formatted data object if all operations are a success.
+     */
+    public getGithubData(githubUser: string, namedTops: string[]): Promise<GithubData> {
         return new Promise((resolve, reject) => {
             Promise.all([this.queryUserData(githubUser), this.queryRepositories(githubUser)]).then(results => {
                 const userQuery = results[0];
@@ -25,6 +35,11 @@ export class NgGithubCardService {
         });
     }
 
+    /**
+     * Queries the github api for user profile information.
+     * @param githubUser - The user to query data for.
+     * @returns {Promise<any>} - Returns the data received without any processing on it.
+     */
     private queryUserData(githubUser: string): Promise<any> {
         return new Promise((resolve, reject) => {
             setTimeout(() => resolve(
@@ -33,6 +48,9 @@ export class NgGithubCardService {
         });
     }
 
+    /**
+     * @see {NgGithubCardService#queryUserData}
+     */
     private queryRepositories(githubUser: string): Promise<any> {
         return new Promise((resolve, reject) => {
             setTimeout(() => resolve(
@@ -41,6 +59,11 @@ export class NgGithubCardService {
         });
     }
 
+    /**
+     * Creates a {GithubProfile} object from the github api query.
+     * @param userQuery - The query data.
+     * @returns {GithubProfile} - Returns the relevant data.
+     */
     private extractProfile(userQuery: any): GithubProfile {
         const obj: GithubProfile = {
             name: userQuery.name,
@@ -56,6 +79,9 @@ export class NgGithubCardService {
         return obj;
     }
 
+    /**
+     * @see {NgGithubCardService#extractProfile}
+     */
     private extractActivity(userQuery: any, repoQuery: any[]): GithubActivity {
         const latest = this.lastPushDay(repoQuery);
         return {
@@ -66,6 +92,9 @@ export class NgGithubCardService {
         };
     }
 
+    /**
+     * @see {NgGithubCardService#extractProfile}
+     */
     private extractTopRepositories(namedTops: string[], repoQuery: any[]): Repository[] {
         if (namedTops.length > this.maxResultRepos) {
             namedTops = namedTops.slice(0, this.maxResultRepos);
@@ -81,7 +110,11 @@ export class NgGithubCardService {
         return foundNamed;
     }
 
-
+    /**
+     * Loops through the repository history to determine last activity.
+     * @param repoQuery - The array of repository histories.
+     * @returns {number} - The amount of days passed since last activity.
+     */
     private lastPushDay(repoQuery: any[]): number {
         const now: any = new Date();
         let latestDate;
@@ -96,11 +129,23 @@ export class NgGithubCardService {
         return Math.floor((now - latestDate) / (1000 * 3600 * 24));
     }
 
+    /**
+     * Verifies if the given repositories are in the user's repository list. Any that are verified are used to create
+     * a Repository object.
+     * @param names - The names of the repositories to verify.
+     * @param repoQuery - The list of repositories to check against.
+     * @returns {[Repository...]} - Returns an array containing repository objects made from all the verified names.
+     */
     private findRepositoriesByName(names: string[], repoQuery: any[]): Repository[] {
         const filtered = repoQuery.filter(repoObj => (names.find(repoObj.name) || null) !== null);
         return filtered.map(r => this.transmuteRepo(r));
     }
 
+    /**
+     * Given an repository api response object, returns a Repository object with only the relevant data.
+     * @param singleRepoQuery - A response object.
+     * @returns {{name: string, stars: number, language, url: string}} - Returns a formatted object.
+     */
     private transmuteRepo(singleRepoQuery: any): Repository {
         return {
             name: singleRepoQuery.name,
@@ -110,6 +155,11 @@ export class NgGithubCardService {
         }
     }
 
+    /**
+     * Sorts the given repository list by startgazers_count.
+     * @param repoQuery - The array to sort.
+     * @returns {{}[]} - Returns the sorted array.
+     */
     private sortRepoQuery(repoQuery: any[]): any[] {
         return repoQuery.sort((a, b) => {
             if (a.stargazers_count === b.stargazers_count) {

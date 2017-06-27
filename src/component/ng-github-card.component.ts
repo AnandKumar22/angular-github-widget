@@ -5,9 +5,72 @@ import {GithubData} from '../data/interfaces';
 @Component({
     selector: 'ng-github-card',
     template: `
-        <div>
-            <h1>Hello World. {{saying}}</h1>
-        </div>`,
+        <div class="github-widget" *ngIf="githubData !== null">
+            <div class="">
+                <div class="gh-widget-container">
+                    <div class="gh-widget-item gh-widget-photo">
+                        <span class="">
+                            <img src="{{githubData.profile.avatarUrl}}">
+                        </span>
+                    </div>
+                    <div class="gh-widget-item gh-widget-personal-details">
+                        <div class="full-name">{{githubData.profile.name}}</div>
+                        <div *ngIf="githubData.profile.bio" class="bio">{{githubData.profile.bio}}</div>
+                        <div *ngIf="githubData.profile.location" class="location">⚲ {{githubData.profile.location}}
+                        </div>
+                    </div>
+                </div>
+                <div class="gh-widget-container gh-widget-stats">
+                    <div class="gh-widget-item">
+                        <div class="count">{{githubData.activity.followers}}</div>
+                        <div class="stat-name">Followers</div>
+                    </div>
+                    <div class="gh-widget-item">
+                        <div class="count">{{githubData.activity.following}}</div>
+                        <div class="stat-name">Following</div>
+                    </div>
+                    <div class="gh-widget-item">
+                        <div class="count">{{githubData.activity.publicRepos}}</div>
+                        <div class="stat-name">Repositories</div>
+                    </div>
+                </div>
+                <hr class="gh-widget-hr">
+                <div class="gh-widget-container">
+                    <div class="gh-widget-item gh-widget-heading">Top repositories</div>
+                </div>
+                <div class="gh-widget-repositories">
+                    <div *ngFor="let repo of githubData.repositories" class="gh-widget-container">
+                        <div class="gh-widget-item names">
+                            <div>
+                                <a class="gh-widget-link" href="{{repo.url}}">
+                                    {{repo.name}}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="gh-widget-item language">
+                            <div>{{repo.language}}</div>
+                        </div>
+                        <div class="gh-widget-item stars">
+                            <div>★{{repo.stars}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gh-widget-container">
+                    <div class="gh-widget-item gh-widget-follow">
+                        <button class="">
+                            <a class="gh-widget-link" target="new" href="{{githubData.profile.userUrl}}">Follow</a>
+                        </button>
+                    </div>
+                    <div class="gh-widget-item gh-widget-active-time">
+                        <span class="">
+                            Last active: {{githubData.activity.lastActivityDay === 0 ? 'Today' :
+                                '' + githubData.activity.lastActivityDay + ' days(s) ago'}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
     styles: [`
         @import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700);
 
@@ -116,7 +179,7 @@ import {GithubData} from '../data/interfaces';
     `
     ]
 })
-export class NgGithubCardComponent implements OnChanges, OnInit, AfterContentInit {
+export class NgGithubCardComponent implements OnChanges {
 
     @Input() githubUser: string;
     @Input() top1: string;
@@ -125,37 +188,34 @@ export class NgGithubCardComponent implements OnChanges, OnInit, AfterContentIni
 
     private db: NgGithubCardService;
 
-    private data: GithubData | null = null;
+    private githubData: GithubData | null = null;
 
+    /**
+     * Simple initialization constructor.
+     * @param service - The data service this component depends on.
+     */
     constructor(service: NgGithubCardService) {
         this.db = service;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('Changes');
-        const githubUser = changes.githubUser.currentValue;
+        const githubUserChange = changes.githubUser;
+        // if a value has been defined, get it or else resolve to null
+        const githubUser: string | null = githubUserChange ? githubUserChange.currentValue : null;
         const namedTops: string[] = [];
-        [changes.top1.currentValue, changes.top2.currentValue, changes.top3.currentValue].forEach(t => {
-            if (t) namedTops.push(t);
+
+        // collect any defined top object's current value into an array
+        [changes.top1, changes.top2, changes.top3].forEach(t => {
+            if (t) namedTops.push(t.currentValue);
         });
 
-        console.log(githubUser);
-        console.log(namedTops);
-        console.log('-------------------------------');
-    }
-
-    ngOnInit(): void {
-        console.log('on init');
-        console.log(this.githubUser);
-        console.log([this.top1, this.top2, this.top3]);
-        console.log('-------------------------------');
-    }
-
-    ngAfterContentInit(): void {
-        console.log('After content init');
-        console.log(this.githubUser);
-        console.log([this.top1, this.top2, this.top3]);
-        console.log('-------------------------------');
+        if (githubUser != null) {
+            this.db.getGithubData(githubUser, namedTops)
+                .then((value: GithubData) => {
+                    this.githubData = value;
+                })
+                .catch(reason => console.error(`Failed to get data for user ${githubUser}`));
+        }
     }
 
 }
