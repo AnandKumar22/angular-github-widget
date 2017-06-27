@@ -1,6 +1,6 @@
 {
   "name": "ng-github-card",
-  "version": "1.0.1-alpha",
+  "version": "2.0.0",
   "description": "A very easy to use angular component to render your github details perhaps on your portfolio website. It is based on the github-card project that can be found at https://surbhioberoi.github.io/github-widget.",
   "scripts": {
     "clean": "del dist",
