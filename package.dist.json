@@ -1,16 +1,10 @@
 {
   "name": "ng-github-card",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A very easy to use angular component to render your github details perhaps on your portfolio website. It is based on the github-card project that can be found at https://surbhioberoi.github.io/github-widget.",
-  "scripts": {
-    "transpile": "ngc",
-    "package": "rollup -c",
-    "minify": "uglifyjs dist/bundles/ng-github-card.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng-github-card.umd.min.js",
-    "build": "npm run transpile && npm run package && npm run minify"
-  },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jregistr/ng-github-widget.git"
+    "url": "git+ssh://git@github.com/jregistr/angular-github-widget.git"
   },
   "keywords": [
     "github",
@@ -24,7 +18,7 @@
   "author": "Jeff Registre <jeffreyregistre@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jregistr/ng-github-widget/issues"
+    "url": "https://github.com/jregistr/angular-github-widget/issues"
   },
   "peerDependencies": {
     "@angular/core": "^4.0.0",

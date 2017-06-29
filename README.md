@@ -1,4 +1,5 @@
 ## Angular Github Card
+[![npm version](https://badge.fury.io/js/ng-github-card.svg)](https://badge.fury.io/js/ng-github-card)   
 
 Angular Github Card is a simple component that showing your github details. It's quite perfect for
 use with a portfolio website. This project is based on [github-widget](https://github.com/surbhioberoi/github-widget). 
